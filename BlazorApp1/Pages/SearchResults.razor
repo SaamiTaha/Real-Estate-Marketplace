@@ -1,0 +1,901 @@
+@* Citation: Parts of this page uses code from the following website: https://www.bootdey.com/snippets/view/light-user-grid *@
+
+@page "/SearchResults/"
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
+@inject NavigationManager UriHelper
+
+<PageTitle>Search Results</PageTitle>
+
+<Modal @ref="helpModal">
+    <Body>
+        <p><b>View listings: </b>Click on the listing address to view more information.</p>
+        <p><b>Compare listings: </b>Click on the compare button to compare important details of one listing with another side by side!</p>
+        <p><b>Save listings: </b>Click on the save button to save a listing. You can view all of your saved listings by pressed the saved button on the top right of your screen.</p>
+        <p><b>Contact the realtor and/or book a viewing: </b>You can do that by pressing the listing's address!</p>
+    </Body>
+</Modal>
+
+<!--Saved and Help button-->
+<!--Modify Search button-->
+<!-- Modify Search Section ^ -->
+<div class="row">
+    <div class="row" style="margin:0px">
+        <div class="flex-parent jc-center" style="margin:0px;">
+            <div id="inlinediv" style="margin-bottom:0px;margin-right:438px;">
+                <button @onclick="tores" id="defaultbutton" style="padding-left: 8px; padding-right: 12px;padding-top:6px;padding-bottom:6px;margin-left:0px;border-width:0px;margin-top:10px;font-size:18px">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z" />
+                        <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z" />
+                    </svg>
+                </button>
+                <p style="padding-right: 0px;padding-left:2px;margin-left:0px;margin-bottom:0px">Back</p>
+
+            </div>
+
+            
+            <div class="col-md-3" style="text-align:center; vertical-align:top">
+                <h1 style="background-color: rgb(230,230,230); border-radius:10px;vertical-align:top;">Search Results</h1>
+            </div>
+
+
+            <div id="inlinediv" style="margin-left:350px;margin-bottom:0px">
+                <button @onclick="()=>helpModal.Open()" id="defaultbutton" style="padding-left: 15px; padding-right: 15px;padding-top:8px;padding-bottom:8px;margin-left:0px;border-width:0px;margin-top:10px">
+                    ?
+                </button>
+
+                <p style="padding-left: 4px;padding-right:6px;margin-bottom:0px;">Help</p>
+            </div>
+
+            <div id="inlinediv" style="margin-bottom:0px">
+                <button @onclick="tohome" id="defaultbutton" style="padding-left: 11px; padding-right: 11px;padding-top:8px;padding-bottom:8px;margin-left:9px;border-width:0px;margin-top:10px">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                        <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z" />
+                    </svg>
+                </button>
+                <p style="padding-right:0px;padding-left:2px;margin-left:5px;margin-bottom:0px">Home</p>
+            </div>
+
+            <div id="inlinediv">
+                <button data-toggle="tooltip" data-placement="top" title="Click here to view your saved listings!" @onclick="OnClickSaved" id="defaultbutton" style="padding-left: 11px; padding-right: 11px;padding-top:8px;padding-bottom:8px;margin-left:9px;border-width:0px;margin-top:10px">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                    </svg>
+                </button>
+                <p style="padding-left: 6px;">Saved</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<p>@result</p>
+<br>
+<p>@leng</p>-->
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <div class="dropdown">
+                <p>
+                    <button type="button" class="btn btn-primary btn-lg dropdown-toggle" id="defaultbutton" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Modify Search
+                    </button>
+                </p>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+
+                        <div class="container text-start">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col">
+                                            <form class="form-inline">
+                                                <label>Location:</label>
+                                                <input type="text" name="location" id="filterfield">
+                                            </form>
+                                            <br>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <img src="map.png" alt="map" width="507" height="326">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Price Range:</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" placeholder="Min" id="filterfield" @bind="minPrice">
+
+                                                <div class="input-group-prepend" style="padding-left: 10px; padding-right: 10px">
+                                                    <span class="input-group-text">-</span>
+                                                </div>
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" placeholder="Max" id="filterfield" @bind="maxPrice">
+                                              
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="customRange1" class="form-label">Square Footage: > 1000 sq. ft.</label>
+                                            <input type="range" class="form-range" id="customRange1">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col">
+                                            <form class="row row-cols-lg-auto g-3">
+                                                <label>Number of Bedrooms:</label>
+                                                <div class="col-12">
+                                                    <label class="visually-hidden" for="inlineFormSelectPref">Preference</label>
+                                                    <select class="form-select" @bind="numBeds" id="inlineFormSelectPref" style="background-color: rgb(230,230,230); border-color: black;">
+                                                        <option value="" selected> </option>
+                                                        @foreach (var template in beds)
+                                                        {
+                                                            <option value=@template>@template+</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <label>Number of Bathrooms:</label>
+                                                <div class="col-12">
+                                                    <label class="visually-hidden" for="inlineFormSelectPref">Preference</label>
+                                                    <select class="form-select" @bind="numBaths" id="inlineFormSelectPref" style="background-color: rgb(230,230,230); border-color: black;">
+                                                        <option value="" selected> </option>
+                                                        @foreach (var template in baths)
+                                                        {
+                                                            <option value=@template>@template+</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label>Property Type:</label>
+                                        </div>
+                                        <div class="col-3">
+                                            @foreach (var check in CheckBoxList())
+                                            {
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" @onchange="eventArgs => { CheckboxClicked(check, eventArgs.Value); }" id="flexCheckChecked">
+                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                        @check
+                                                    </label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                                                <button class="btn btn-primary btn-lg dropdown-toggle" id="defaultbutton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
+                                                    More Filters
+                                                </button>
+                                                <div class="collapse" id="collapseExample2">
+                                                    <div class="card card-body">
+                                                        <div class="container text-start">
+                                                            <div class="row">
+
+                                                                <div class="col">
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <form class="row row-cols-lg-auto g-3">
+                                                                                <label>Property Size:</label>
+                                                                                <div class="col-12">
+                                                                                    <label class="visually-hidden" for="inlineFormSelectPref">Preference</label>
+                                                                                    <select class="form-select" id="inlineFormSelectPref" style="background-color: rgb(230,230,230); border-color: black; ">
+                                                                                        <option selected></option>
+                                                                                        <option value="1"> less than 1000 sq. ft.</option>
+                                                                                        <option value="2">> 1000 sq. ft.</option>
+                                                                                        <option value="3">> 1500 sq. ft.</option>
+                                                                                        <option value="3">> 2000 sq. ft.</option>
+                                                                                        <option value="3">> 2500 sq. ft.</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <br>
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <label>Amenities: </label>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" type="checkbox" value="Pool" id="flexCheckDefault">
+                                                                                <label class="form-check-label" for="flexCheckDefault">
+                                                                                    Pool
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" type="checkbox" value="Backyard" id="flexCheckChecked">
+                                                                                <label class="form-check-label" for="flexCheckChecked">
+                                                                                    Backyard
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" type="checkbox" value="A/C" id="flexCheckChecked">
+                                                                                <label class="form-check-label" for="flexCheckChecked">
+                                                                                    A/C
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" type="checkbox" value="Garage" id="flexCheckChecked">
+                                                                                <label class="form-check-label" for="flexCheckChecked">
+                                                                                    Garage
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" type="checkbox" value="Balcony" id="flexCheckChecked">
+                                                                                <label class="form-check-label" for="flexCheckChecked">
+                                                                                    Balcony
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col">
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <form class="row row-cols-lg-auto g-3">
+                                                                                <label>Parking Spaces:</label>
+                                                                                <div class="col-12">
+                                                                                    <label class="visually-hidden" for="inlineFormSelectPref">Preference</label>
+                                                                                    <select class="form-select" id="inlineFormSelectPref" style="background-color: rgb(230,230,230); border-color: black; ">
+                                                                                        <option></option>
+                                                                                        <option value="1">1+</option>
+                                                                                        <option value="2">2+</option>
+                                                                                        <option value="3">3+</option>
+                                                                                        <option value="4">4+</option>
+                                                                                        <option value="5">5+</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <br>
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <form class="row row-cols-lg-auto g-3">
+                                                                                <label>Year Built:</label>
+                                                                                <div class="col-12">
+                                                                                    <label class="visually-hidden" for="inlineFormSelectPref">Preference</label>
+                                                                                    <select class="form-select" @bind="yearBuilt" id="inlineFormSelectPref" style="background-color: rgb(230,230,230); border-color: black;">
+                                                                                        <option value="" selected> </option>
+                                                                                        @foreach (var template in yearsBuilt)
+                                                                                        {
+                                                                                            <option value=@template>@template</option>
+                                                                                        }
+                                                                                    </select>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <br>
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <label>Price Reduction: </label>
+                                                                                <input type="text" id="filterfield">
+                                                                                <div class="input-group-append">
+                                                                                    <span class="input-group-text">%</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <button type="button" class="btn btn-primary btn-lg" id="defaultbutton" @onclick="OnClickSearch">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                                        </svg>Search
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="job-shortby ml-sm-auto d-flex align-items-center">
+    <form class="form-inline">
+        <div class="form-group mb-0">
+            <label class="justify-content-start mr-1"> Sort by :</label>
+            <div class="short-by">
+                <select @onchange="@sort" class="form-control basic-select select2-hidden-accessible" data-select2-id="0" tabindex="-1" aria-hidden="true">
+                    <option value=0>Featured</option>
+                    <option value=1>Price (Lowest to Highest)</option>
+                    <option value=2>Price (Highest to Lowest)</option>
+                    <option value=3>Most Recent</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    @for (int i = 0; i < Database.filtered.Count; i++)
+    {
+        int j = i;
+        <div class="col-6">
+            <div class="candidate-list candidate-grid">
+                <div class="candidate-list-image">
+                    <img class="img-fluid" src="@Database.filtered[i].images[0]" alt="">
+                </div>
+                <div class="candidate-list-details">
+                    <div class="candidate-list-info">
+                        <div class="candidate-list-title">
+                            <h4>
+                                <button data-toggle="tooltip" data-placement="top" title="Click here to view more information on the listing!" @onclick="() => tohouse(j)" class="btn btn-primary" id="defaultbutton" type="button" style="border-width:0;border-radius:15px;background-color:white;font-size:30px;font-weight:10;padding-left:15px;padding-right:15px">
+                                    <u style="color:#3381ff">@Database.filtered[i].Address</u>
+                                </button>
+                            </h4>
+
+                            <h4><a><i class="fas fa-dollar-sign"></i> $ @priceformat(@Database.filtered[i].Price) </a></h4>
+                            <h5><a><i class="fas fa-dollar-sign"></i> @Database.filtered[i].PropertyType </a></h5>
+                        </div>
+                        <div class="candidate-list-option">
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-home"></i> @Database.filtered[i].Bedrooms bedrooms | @Database.filtered[i].Bathrooms bathrooms</li>
+                                <li>           </li>
+                            </ul>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-ruler"></i> @Database.filtered[i].SquareFootage sq ft. </li>
+                                <li>          </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="candidate-list-favourite-time" style="margin-bottom:0px">
+                            <div id="inlinediv" style="margin-right:10px;margin-bottom:0px">
+                            <button data-toggle="tooltip" data-placement="top" title="Click here to compare this listing with others!" class="btn btn-primary" @onclick="() => tocompare(j)" style="padding:11px;padding-top:6px;padding-bottom:6px;font-size:20px" id="defaultbutton" type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bar-chart-fill" viewBox="0 0 16 16">
+                                    <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2z" />
+                                </svg>
+                            </button>
+                            <p style="font-size:14px;margin-bottom:0px">Compare</p>
+                            </div>
+                            <div id="inlinediv" style="margin-right:10px;margin-bottom:0px">
+                                @if (!Database.saved.Contains(Database.filtered[j]))
+                            {
+                                <button data-toggle="tooltip" data-placement="top" title="Click here to save this listing! You can then view your saved listings by clicking the saved button on the top right of this page."  @onclick="() => saved(j)" id="defaultbutton" style="padding-left: 10px; padding-right: 10px;padding-top:4px; padding-bottom: 4px;margin-left:620px;border-width:0;font-size:25px">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                                    </svg>
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-primary" @onclick="() => saved(j)" id="defaultbutton" style="padding-left: 10px; padding-right: 10px;padding-top:4px; padding-bottom: 4px;margin-left:620px;border-width:0;font-size:25px">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+                                    </svg>
+                                </button>
+                            }
+                            <p style="margin-left:620px;font-size:14px;margin-bottom:0px">Save</p>
+                            </div>
+                            
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <button type="button" class="btn btn-primary btn-lg" @onclick="OnClickAllListings" id="defaultbutton">Explore All Listings</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<style>
+
+    body {
+        margin-top: 20px;
+        background: #F5F5F5;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+
+    .NavBar {
+        display: inline-block;
+        text-align: center;
+        margin-right: 10px;
+        float: right;
+    }
+
+    input#filterfield {
+        background-color: rgb(230,230,230);
+        border-color: black;
+    }
+
+    button#bigbutton {
+        padding: 5px;
+        background-color: rgb(127, 180, 240);
+        color: black;
+        border-color: black;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 2px;
+        margin-top: 50px;
+    }
+
+    button#defaultbutton {
+        padding: 5px;
+        background-color: rgb(127, 180, 240);
+        color: black;
+        border-width: 0px;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 2px;
+    }
+
+    .flex-parent {
+        margin-top: 50px;
+        display: flex;
+    }
+
+    .jc-center {
+        justify-content: center;
+        font-size: 15px;
+    }
+
+    .job-shortby {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* Candidate List */
+    .candidate-list {
+        background: #ffffff;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        border-bottom: 1px solid #eeeeee;
+        margin-bottom: 20px;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        padding: 20px;
+        -webkit-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+    }
+
+        .candidate-list:hover {
+            -webkit-box-shadow: 0px 0px 34px 4px rgba(33, 37, 41, 0.06);
+            box-shadow: 0px 0px 34px 4px rgba(33, 37, 41, 0.06);
+            position: relative;
+            z-index: 99;
+        }
+
+            .candidate-list:hover a.candidate-list-favourite {
+                color: #e74c3c;
+                -webkit-box-shadow: -1px 4px 10px 1px rgba(24, 111, 201, 0.1);
+                box-shadow: -1px 4px 10px 1px rgba(24, 111, 201, 0.1);
+            }
+
+        .candidate-list .candidate-list-image {
+            margin-right: 25px;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 80px;
+            flex: 0 0 80px;
+            border: none;
+        }
+
+            .candidate-list .candidate-list-image img {
+                width: 80px;
+                height: 80px;
+                -o-object-fit: cover;
+                object-fit: cover;
+            }
+
+    .candidate-list-title {
+        margin-bottom: 5px;
+        font-size: 25px;
+    }
+
+    .candidate-list-details ul {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        margin-bottom: 0px;
+    }
+
+        .candidate-list-details ul li {
+            margin: 5px 10px 5px 0px;
+            font-size: 18px;
+        }
+
+    .candidate-list .candidate-list-favourite-time {
+        margin-left: auto;
+        margin-right: 6px;
+        text-align: center;
+        font-size: 10px;
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 90px;
+        flex: 0 0 90px;
+        float: inline-start;
+        margin-bottom: 25px;
+    }
+
+
+        .candidate-list .candidate-list-favourite-time .candidate-list-favourite {
+            display: inline-block;
+            position: relative;
+            height: 40px;
+            width: 40px;
+            line-height: 40px;
+            border: 1px solid #eeee;
+            border-radius: 100%;
+            text-align: center;
+            -webkit-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+            margin-bottom: 20px;
+            font-size: 15px;
+            color: #646f79;
+        }
+
+            .candidate-list .candidate-list-favourite-time .candidate-list-favourite:hover {
+                background: #ffffff;
+                color: darkblue;
+            }
+
+    .candidate-banner .candidate-list:hover {
+        position: inherit;
+        -webkit-box-shadow: inherit;
+        box-shadow: inherit;
+        z-index: inherit;
+    }
+
+
+    /* Candidate Grid */
+    .candidate-list.candidate-grid {
+        padding: 0px;
+        display: block;
+        border-bottom: none;
+    }
+
+    .candidate-grid .candidate-list-image {
+        text-align: center;
+        margin-right: 0px;
+    }
+
+        .candidate-grid .candidate-list-image img {
+            height: 300px;
+            width: 100%;
+        }
+
+    .candidate-grid .candidate-list-details {
+        text-align: center;
+        padding: 20px 20px 0px 20px;
+        border: 1px solid #eeeeee;
+        border-top: none;
+    }
+
+        .candidate-grid .candidate-list-details ul {
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
+
+            .candidate-grid .candidate-list-details ul li {
+                margin: 2px 5px;
+            }
+
+    .candidate-grid .candidate-list-favourite-time {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        border-top: 1px solid #eeeeee;
+        margin-top: 10px;
+        padding: 10px 0;
+    }
+
+        .candidate-grid .candidate-list-favourite-time a {
+            margin-bottom: 0;
+            margin-left: auto;
+        }
+
+        .candidate-grid .candidate-list-favourite-time span {
+            display: inline-block;
+            margin: 0;
+            -ms-flex-item-align: center;
+            align-self: center;
+        }
+
+    .candidate-list.candidate-grid .candidate-list-favourite-time .candidate-list-favourite {
+        margin-bottom: 0px;
+    }
+
+    .owl-carousel .candidate-list.candidate-grid {
+        margin-bottom: 20px;
+    }
+</style>
+@code{
+    private Modal helpModal { get; set; }
+    private void OnClickAllListings()
+    {
+        Database.filtered = Database.houses;
+        UriHelper.NavigateTo($"SearchResults/");
+    }
+
+    private void OnClickSaved()
+    {
+        UriHelper.NavigateTo($"SavedListings/");
+    }
+    public List<string> list = new List<string>();
+    public string result;
+    public int leng { get; set; }
+
+
+    public int len = Database.filtered.Count();
+    List<string> houseNames = new List<string>();
+    public string houses1 { get; set; }
+    public string tooltip = "";
+    public bool issaved = false;
+
+    public void sort(ChangeEventArgs e)
+    {
+        if (e.Value.ToString() == "1")
+        {
+            Database.filtered.Sort((x, y) => Nullable.Compare(x.Price, y.Price));
+        }
+        else if (e.Value.ToString() == "2")
+        {
+            Database.filtered.Sort((x, y) => Nullable.Compare(y.Price, x.Price));
+        }
+    }
+
+    private int index;
+    private void test()
+    {
+        index = 0;
+        UriHelper.NavigateTo($"housepage/{index}");
+
+    }
+
+    private void tohouse(int i)
+    {
+
+        UriHelper.NavigateTo($"housepage/{i}");
+    }
+
+    private void tohome()
+    {
+
+        UriHelper.NavigateTo($"Homepage");
+
+    }
+
+    private void tores()
+    {
+
+        UriHelper.NavigateTo($"Homepage");
+
+    }
+
+    private void unsave(int i)
+    {
+        Database.saved.Remove(Database.saved[i]);
+    }
+
+    public List<string> CheckBox { get; set; } = new List<string>();
+    void CheckboxClicked(string CheckID, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!CheckBox.Contains(CheckID))
+            {
+                CheckBox.Add(CheckID);
+            }
+        }
+        else
+        {
+            if (CheckBox.Contains(CheckID))
+            {
+                CheckBox.Remove(CheckID);
+            }
+        }
+    }
+
+
+    public List<String> CheckBoxList()
+    {
+        List<String> checkBox = new List<String>();
+        checkBox.Add("Single-Family");
+        checkBox.Add("Multi-Family");
+        checkBox.Add("Townhouse");
+        checkBox.Add("Apartment");
+
+        return checkBox;
+    }
+    List<House> temp = new List<House>();
+    private string? address;
+    private double? minPrice;
+    private double? maxPrice;
+
+    public bool singleFamily { get; set; }
+    public bool multiFamily { get; set; }
+    public bool townHouse { get; set; }
+    public bool appartment { get; set; }
+
+    List<int> beds = new List<int>() { 1, 2, 3, 4, 5 };
+    public int numBeds { get; set; }
+    private void tocompare(int i)
+    {
+
+        UriHelper.NavigateTo($"Compare/{i}");
+    }
+
+
+    List<int> baths = new List<int>() { 1, 2, 3, 4, 5 };
+    public int numBaths { get; set; }
+
+    List<int> yearsBuilt = new List<int>() { 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 };
+    public int yearBuilt { get; set; }
+
+    private void OnClickSearch()
+    {
+
+        Database.filtered = Database.houses;
+        if (CheckBox.Count() == 0)
+        {
+            Console.WriteLine("No property types selected");
+        }
+        else
+        {
+            if (CheckBox.Contains("Single-Family"))
+            {
+                Console.WriteLine("Single selected");
+                for (int i = 0; i < Database.houses.Count; i++)
+                {
+                    if (Database.houses[i].PropertyType == "Single-Family")
+                    {
+                        temp.Add(Database.houses[i]);
+                    }
+                }
+            }
+            if (CheckBox.Contains("Multi-Family"))
+            {
+                Console.WriteLine("Multi selected");
+                for (int i = 0; i < Database.houses.Count; i++)
+                {
+                    if (Database.houses[i].PropertyType == "Multi-Family")
+                    {
+                        temp.Add(Database.houses[i]);
+                    }
+                }
+            }
+            if (CheckBox.Contains("Townhouse"))
+            {
+                Console.WriteLine("Townhouse selected");
+                for (int i = 0; i < Database.houses.Count; i++)
+                {
+                    if (Database.houses[i].PropertyType == "Townhouse")
+                    {
+                        temp.Add(Database.houses[i]);
+                    }
+                }
+            }
+            if (CheckBox.Contains("Apartment"))
+            {
+                Console.WriteLine("Apartment selected");
+                for (int i = 0; i < Database.houses.Count; i++)
+                {
+                    if (Database.houses[i].PropertyType == "Apartment")
+                    {
+                        temp.Add(Database.houses[i]);
+                    }
+                }
+            }
+            Database.filtered = temp;
+            Console.WriteLine(temp.Count());
+        }
+
+        if (minPrice == null && maxPrice == null)
+        {
+
+        }
+        else if (minPrice != null && maxPrice == null)
+        {
+            Database.filtered = Database.searchByPrice(Database.filtered, minPrice, 10000000000000);
+        }
+        else if (minPrice == null && maxPrice != null)
+        {
+            Database.filtered = Database.searchByPrice(Database.filtered, 0, maxPrice);
+        }
+        else if (minPrice != null && maxPrice != null)
+        {
+            Database.filtered = Database.searchByPrice(Database.filtered, minPrice, maxPrice);
+        }
+
+        if (yearBuilt != 0)
+        {
+            Database.filtered = Database.searchByYearBuilt(Database.filtered, yearBuilt);
+        }
+
+        Database.filtered = Database.searchByBedrooms(Database.filtered, numBeds);
+        Database.filtered = Database.searchByBathrooms(Database.filtered, numBaths);
+
+        temp.Clear();
+        UriHelper.NavigateTo($"SearchResults/");
+    }
+    private void OnClickTest()
+    {
+        for (int i = 0; i < Database.filtered.Count(); i++)
+        {
+            list.Add(Database.filtered[i].Address);
+        }
+        leng = Database.filtered.Count();
+        result = String.Join(',', list);
+
+    }
+
+    private string priceformat(double? price)
+    {
+        string formatted = price.ToString();
+        if (formatted.Length == 7)
+        {
+            formatted = formatted.Insert(4, ",");
+            formatted = formatted.Insert(1, ",");
+        }
+        else if (formatted.Length == 6)
+        {
+            formatted = formatted.Insert(3, ",");
+        }
+        else if (formatted.Length == 5)
+        {
+            formatted = formatted.Insert(2, ",");
+        }
+        else
+        {
+            return "fail";
+        }
+        return formatted;
+    }
+
+    private void saved(int j)
+    {
+        if (Database.saved.Contains(Database.filtered[j]))
+        {
+            Database.saved.Remove(Database.filtered[j]);
+        }
+        else
+        {
+            Database.saved.Add(Database.filtered[j]);
+        }
+    }
+}

@@ -1,0 +1,377 @@
+@* Citation: Parts of this page uses code from the following website: https://www.bootdey.com/snippets/view/light-user-grid *@
+
+@page "/SavedListings"
+
+@inject NavigationManager UriHelper;
+
+<PageTitle>Index</PageTitle>
+
+    <!--Saved and Help button-->
+
+    <Modal @ref="helpModal">
+        <Body>
+            <p><b>View listings: </b>Click on the listing address to view more information.</p>
+            <p><b>Contact the realtor and/or book a viewing: </b>You can do that by pressing the listing's address!</p>
+        </Body>
+    </Modal>
+
+    <div class="container">
+        <div class="row" style="margin:0px">
+            <div class="flex-parent jc-center" style="margin:0px">
+                <div id="inlinediv" style="margin-bottom:0px;margin-right:445px;">
+                    <button @onclick="tores" id="defaultbutton" style="padding-left: 8px; padding-right: 12px;padding-top:6px;padding-bottom:6px;margin-left:0px;border-width:0px;margin-top:10px;font-size:18px">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
+                        <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                        </svg>
+                    </button>
+                    <p style="padding-right: 0px;padding-left:2px;margin-left:0px;margin-bottom:0px">Back</p>
+                                    
+                </div>
+                
+                <div class="col-md-3" style="text-align:center; vertical-align:top">
+                <h1 style="background-color: rgb(230,230,230); border-radius:10px;vertical-align:top;">Saved Listings</h1>
+                </div>
+                
+
+            <div id="inlinediv" style="margin-left:400px;margin-bottom:0px">
+                <button @onclick="()=>helpModal.Open()" id="defaultbutton" style="padding-left: 15px; padding-right: 15px;padding-top:8px;padding-bottom:8px;margin-left:0px;border-width:0px;margin-top:10px">
+                ?
+                </button>
+                                        
+                <p style="padding-left: 4px;padding-right:6px;margin-bottom:0px;">Help</p>
+            </div>
+            <div id="inlinediv" style="margin-bottom:0px">
+                <button @onclick="tohome" id="defaultbutton" style="padding-left: 11px; padding-right: 11px;padding-top:8px;padding-bottom:8px;margin-left:9px;border-width:0px;margin-top:10px">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                    <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
+                </svg>
+                </button>
+                <p style="padding-right:0px;padding-left:2px;margin-left:5px;margin-bottom:0px">Home</p>
+            </div>
+    
+            <div id="inlinediv">
+                <button @onclick="OnClickSaved" id="defaultbutton" style="padding-left: 11px; padding-right: 11px;padding-top:8px;padding-bottom:8px;margin-left:9px;border-width:0px;margin-top:10px">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                    </svg>
+                </button>
+                <p style="padding-left: 6px;">Saved</p>
+            </div>
+        </div>
+
+<!-- Modify Search Section ^ -->
+        </div>
+        <div class="row">
+        @for(int i = 0; i < Database.saved.Count; i++){
+            int j = i;
+            <div class="col-6">
+                <div class="candidate-list candidate-grid">
+                    <div class="candidate-list-image">
+                        <img class="img-fluid" src="@Database.saved[i].images[0]" alt="">
+                    </div>
+                    <div class="candidate-list-details">
+                        <div class="candidate-list-info">
+                            <div class="candidate-list-title">
+                                <h4><button data-toggle="tooltip" data-placement="top" title="Click here to view more information on the listing!" @onclick="() => tohouse(j)" class="btn btn-primary" id="defaultbutton" type="button" style="border-width:0;border-radius:15px;background-color:white;font-size:30px;font-weight:10;padding-left:15px;padding-right:15px">
+                                    <u style="color:#3381ff">@Database.saved[i].Address</u>
+                                </button>
+                                </h4>
+                               
+                                <h5><a><i class="fas fa-dollar-sign"></i> $@Database.saved[i].Price </a></h5>
+                                <h5><a><i class="fas fa-dollar-sign"></i> @Database.saved[i].PropertyType </a></h5>
+                            </div>
+                            <div class="candidate-list-option">
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-home"></i> @Database.saved[i].Bedrooms bedrooms | @Database.saved[i].Bathrooms bathrooms</li>
+                                    <li>           </li>
+                                </ul>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-ruler"></i> @Database.saved[i].SquareFootage sq ft. </li>
+                                    <li>          </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="candidate-list-favourite-time" style="margin-bottom:0px">
+                            <div id="inlinediv" style="margin-right:10px;margin-bottom:0px">
+                            <button data-toggle="tooltip" data-placement="top" title="Click here to compare this listing with others!" class="btn btn-primary" @onclick="() => tocompare(j)" style="padding:11px;padding-top:6px;padding-bottom:6px;font-size:20px; border-width:0px;" id="defaultbutton" type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bar-chart-fill" viewBox="0 0 16 16">
+                                    <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2z" />
+                                </svg>
+                            </button>
+                            <p style="font-size:14px;margin-bottom:0px">Compare</p>
+                            </div>
+                            <div id="inlinediv" style="margin-right:10px;margin-bottom:0px">
+                            <button data-toggle="tooltip" data-placement="top" title="Click here to remove this listing from your saved list." @onclick="() => unsave(j)" id="defaultbutton" style="padding-left: 12px; padding-right: 12px;padding-top:6px; padding-bottom: 6px;margin-left:465px;border-width:0;font-size:25px">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-heartbreak-fill" viewBox="0 0 16 16">
+                                <path d="M8.931.586 7 3l1.5 4-2 3L8 15C22.534 5.396 13.757-2.21 8.931.586ZM7.358.77 5.5 3 7 7l-1.5 3 1.815 4.537C-6.533 4.96 2.685-2.467 7.358.77Z"/>
+                                </svg>
+                            </button>
+                            <p style="margin-left:460px;font-size:14px;margin-bottom:0px">Un-save</p>
+                            </div>
+                            
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        }
+        @if(Database.saved.Count == 0){
+            <h3 style="margin-left:505px;margin-top:50px;color:grey"><i>No Saved Listings Yet!</i></h3>
+        }
+        </div>
+        
+    </div>
+
+
+    <style>
+        body {
+            margin-top: 20px;
+            background: #F5F5F5;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .heading{
+            margin-top: 30px;
+            margin-bottom: 25px;
+        }
+        .NavBar {
+            display: inline-block;
+            text-align: center;
+            margin-right: 10px;
+            float: right;
+        }
+
+        button#defaultbutton {
+            padding: 5px;
+            background-color: rgb(127, 180, 240);
+            color: black;
+            border-color: black;
+            font-weight: bold;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .flex-parent {
+            margin-top: 50px;
+            display: flex;
+        }
+
+        .jc-center {
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .job-shortby {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Candidate List */
+        .candidate-list {
+            background: #ffffff;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            border-bottom: 1px solid #eeeeee;
+            margin-bottom: 20px;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 20px;
+            -webkit-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+        }
+
+            .candidate-list:hover {
+                -webkit-box-shadow: 0px 0px 34px 4px rgba(33, 37, 41, 0.06);
+                box-shadow: 0px 0px 34px 4px rgba(33, 37, 41, 0.06);
+                position: relative;
+                z-index: 99;
+            }
+
+                .candidate-list:hover a.candidate-list-favourite {
+                    color: #e74c3c;
+                    -webkit-box-shadow: -1px 4px 10px 1px rgba(24, 111, 201, 0.1);
+                    box-shadow: -1px 4px 10px 1px rgba(24, 111, 201, 0.1);
+                }
+
+            .candidate-list .candidate-list-image {
+                margin-right: 25px;
+                -webkit-box-flex: 0;
+                -ms-flex: 0 0 80px;
+                flex: 0 0 80px;
+                border: none;
+            }
+
+                .candidate-list .candidate-list-image img {
+                    width: 80px;
+                    height: 80px;
+                    -o-object-fit: cover;
+                    object-fit: cover;
+                }
+
+        .candidate-list-title {
+            margin-bottom: 5px;
+            font-size: 25px;
+        }
+
+        .candidate-list-details ul {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-bottom: 0px;
+        }
+
+            .candidate-list-details ul li {
+                margin: 5px 10px 5px 0px;
+                font-size: 18px;
+            }
+
+        .candidate-list .candidate-list-favourite-time {
+            margin-left: auto;
+            margin-right: 6px;
+            text-align: center;
+            font-size: 10px;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 90px;
+            flex: 0 0 90px;
+            float: inline-start;
+            margin-bottom: 25px;
+        }
+
+
+            .candidate-list .candidate-list-favourite-time .candidate-list-favourite {
+                display: inline-block;
+                position: relative;
+                height: 40px;
+                width: 40px;
+                line-height: 40px;
+                border: 1px solid #eeee;
+                border-radius: 100%;
+                text-align: center;
+                -webkit-transition: all 0.3s ease-in-out;
+                transition: all 0.3s ease-in-out;
+                margin-bottom: 20px;
+                font-size: 15px;
+                color: #646f79;
+            }
+
+                .candidate-list .candidate-list-favourite-time .candidate-list-favourite:hover {
+                    background: #ffffff;
+                    color: darkblue;
+                }
+
+        .candidate-banner .candidate-list:hover {
+            position: inherit;
+            -webkit-box-shadow: inherit;
+            box-shadow: inherit;
+            z-index: inherit;
+        }
+
+
+        /* Candidate Grid */
+        .candidate-list.candidate-grid {
+            padding: 0px;
+            display: block;
+            border-bottom: none;
+        }
+
+        .candidate-grid .candidate-list-image {
+            text-align: center;
+            margin-right: 0px;
+        }
+
+            .candidate-grid .candidate-list-image img {
+                height: 300px;
+                width: 100%;
+            }
+
+        .candidate-grid .candidate-list-details {
+            text-align: center;
+            padding: 20px 20px 0px 20px;
+            border: 1px solid #eeeeee;
+            border-top: none;
+        }
+
+            .candidate-grid .candidate-list-details ul {
+                -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+            }
+
+                .candidate-grid .candidate-list-details ul li {
+                    margin: 2px 5px;
+                }
+
+        .candidate-grid .candidate-list-favourite-time {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            border-top: 1px solid #eeeeee;
+            margin-top: 10px;
+            padding: 10px 0;
+        }
+
+            .candidate-grid .candidate-list-favourite-time a {
+                margin-bottom: 0;
+                margin-left: auto;
+            }
+
+            .candidate-grid .candidate-list-favourite-time span {
+                display: inline-block;
+                margin: 0;
+                -ms-flex-item-align: center;
+                align-self: center;
+            }
+
+        .candidate-list.candidate-grid .candidate-list-favourite-time .candidate-list-favourite {
+            margin-bottom: 0px;
+        }
+
+        .owl-carousel .candidate-list.candidate-grid {
+            margin-bottom: 20px;
+        }
+    </style>
+
+    @code {
+
+        private void tocompare(int i)
+    {
+
+        UriHelper.NavigateTo($"Compare/{i}");
+    }
+
+        private Modal helpModal { get; set; }
+
+        private void OnClickSaved()
+        {
+            UriHelper.NavigateTo($"SavedListings/");
+        }
+        private void tohouse(int i){
+
+            UriHelper.NavigateTo($"housepage/{i}");
+        }
+
+        private void tohome(){
+
+            UriHelper.NavigateTo($"Homepage");
+
+        }
+
+        private void tores(){
+
+            UriHelper.NavigateTo($"SearchResults");
+
+        }
+
+        private void unsave(int i){
+            Database.saved.Remove(Database.saved[i]);
+        }
+
+    }
